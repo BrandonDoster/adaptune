@@ -63,3 +63,7 @@ Tested on Android 17 with adapter firmware `1.10.0`.
 [docs/PROTOCOL.md](docs/PROTOCOL.md) has the commands, the settings key mapping, and how it was captured. [docs/rfcomm_dump.py](docs/rfcomm_dump.py) pulls the RFCOMM payloads out of an Android Bluetooth HCI snoop log if you want to capture something new (`python3 docs/rfcomm_dump.py --json btsnoop_hci.log` prints just the adapter commands and replies, with Wi-Fi passwords redacted).
 
 Open items are in [app/BACKLOG.md](app/BACKLOG.md).
+
+## License
+
+[GNU AGPL v3.0](LICENSE). Copyright (C) 2026 Brandon Doster.

@@ -5,6 +5,7 @@
 !/app/
 !/docs/
 !/README.md
+!/LICENSE
 !/.github/
 
 /app/build/
