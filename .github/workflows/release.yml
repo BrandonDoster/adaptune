@@ -1,0 +1,64 @@
+# Builds a release-signed APK when a version tag (v1.2.3) is pushed and publishes it as a
+# GitHub release with a SHA-256 checksum and a build provenance attestation.
+#
+# Secrets on the "release" environment:
+#   ADAPTUNE_KEYSTORE_B64       base64 of the PKCS12 release keystore
+#   ADAPTUNE_KEYSTORE_PASSWORD  its password
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write      # create the release
+      id-token: write      # sign the provenance attestation
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Android SDK packages
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKMANAGER" --licenses > /dev/null
+          "$SDKMANAGER" "platforms;android-37.0" "build-tools;37.0.0" > /dev/null
+
+      - name: Build and sign
+        env:
+          KEYSTORE_B64: ${{ secrets.ADAPTUNE_KEYSTORE_B64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ADAPTUNE_KEYSTORE_PASSWORD }}
+          VERSION_CODE: ${{ github.run_number }}
+        run: |
+          if [ -z "$KEYSTORE_B64" ] || [ -z "$KEYSTORE_PASSWORD" ]; then
+            echo "::error::Signing secrets are missing"; exit 1
+          fi
+          export KEYSTORE="$RUNNER_TEMP/release.jks"
+          trap 'rm -f "$KEYSTORE"' EXIT
+          printf '%s' "$KEYSTORE_B64" | base64 -d > "$KEYSTORE"
+          VERSION_NAME="${GITHUB_REF_NAME#v}" app/build.sh
+          cd app/build && sha256sum adaptune-*.apk > SHA256SUMS
+
+      # Attestations need a public repo (or GitHub Enterprise for private ones).
+      - if: ${{ !github.event.repository.private }}
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: app/build/adaptune-*.apk
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" app/build/adaptune-*.apk app/build/SHA256SUMS --verify-tag --generate-notes --repo "$GITHUB_REPOSITORY"

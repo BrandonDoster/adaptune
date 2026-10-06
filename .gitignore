@@ -1,0 +1,14 @@
+# Allowlist: only the app, docs, and CI workflow are tracked.
+# Everything else here (APKs, decompiled code, captures, logs, keys) stays local.
+/*
+!/.gitignore
+!/app/
+!/docs/
+!/README.md
+!/.github/
+
+/app/build/
+/app/debug.keystore
+*.keystore
+*.jks
+.DS_Store

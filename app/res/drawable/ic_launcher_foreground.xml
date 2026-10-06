@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Concept 4: a plug sending a signal. Arcs share a centre at (50,54) and open to the right.
+     Everything that matters sits inside the 66dp safe circle around (54,54). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- cable and plug -->
+    <path android:fillColor="#434A54" android:pathData="M6,52.5h16v3h-16z" />
+    <path android:fillColor="#434A54"
+        android:pathData="M27,47h9a2,2 0,0 1,2 2v10a2,2 0,0 1,-2 2h-9a5,5 0,0 1,-5 -5v-4a5,5 0,0 1,5 -5z" />
+    <path android:fillColor="#00000000" android:strokeColor="#434A54" android:strokeWidth="1.6"
+        android:pathData="M38.8,50.3h4.4a1,1 0,0 1,1 1v5.4a1,1 0,0 1,-1 1h-4.4z" />
+    <!-- signal: orange source, blue reach -->
+    <path android:fillColor="#F26B21" android:pathData="M50,54m-3,0a3,3 0,1 0,6 0a3,3 0,1 0,-6 0" />
+    <path android:fillColor="#00000000" android:strokeColor="#F26B21" android:strokeWidth="3.6"
+        android:strokeLineCap="round" android:pathData="M55.79,47.11A9,9 0,0 1,55.79 60.89" />
+    <path android:fillColor="#00000000" android:strokeColor="#1E8FFF" android:strokeWidth="4.4"
+        android:strokeLineCap="round" android:pathData="M61.57,40.21A18,18 0,0 1,61.57 67.79" />
+    <path android:fillColor="#00000000" android:strokeColor="#1E8FFF" android:strokeWidth="4.4"
+        android:strokeLineCap="round" android:pathData="M67.36,33.32A27,27 0,0 1,67.36 74.68" />
+</vector>
